@@ -18,6 +18,19 @@ var cloneA = new Array(pCY);
 
 var tickS = 100;
 
+function genWorld() {
+    // Reset the array to all 'air'
+    for (var i = 0; i < pCY; i++) {
+        r = Math.random()
+        var el = 0
+        if(r < 0.5){
+            el = 1
+        }
+        pA[i] = new Array(pCX).fill(el);
+        cloneA[i] = new Array(pCX).fill(el);
+
+    }
+}
 
 
 function tick() {
@@ -26,7 +39,18 @@ function tick() {
     ctx.fillStyle = bgHue;
     ctx.fillRect(minW, minH, maxW, maxH);
 
+    for (var x = 0; x < pCX; x++){
+        for (var y = 0; y < pCY; y++){
+            
+        }
+    }
+
 }
+
+
+// Initialize
+genWorld()
+
 
 
 setInterval(tick, tickS);
