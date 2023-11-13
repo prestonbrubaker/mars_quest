@@ -19,16 +19,19 @@ var cloneA = new Array(pCY);
 var tickS = 100;
 
 function genWorld() {
-    // Reset the array to all 'air'
-    for (var i = 0; i < pCY; i++) {
-        r = Math.random()
-        var el = 0
-        if(r < 0.5){
-            el = 1
-        }
-        pA[i] = new Array(pCX).fill(el);
-        cloneA[i] = new Array(pCX).fill(el);
+    for (var x = 0; x < pCX; x++){
+        temp_x = new Array(pCY);
+        for (var y = 0; y < pCY; y++){
+            r = Math.random();
 
+            if(r < 0.5){
+                temp_x[y] = 1
+            }
+            else{
+                temp_x[y] = 0
+            }
+        }
+        pA[x] = temp_x
     }
 }
 
