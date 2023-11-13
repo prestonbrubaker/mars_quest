@@ -28,18 +28,21 @@ var cloneA = new Array(pCY);
 var offXP = 0;  //offset of pixels
 var offYP = 20;  //offset of pixels
 
-var player_w = pixS
-var player_h = pixS * 2
-var player_off_x = maxW / 2
-var player_off_y = maxH / 2
+var player_w = pixS;
+var player_h = pixS * 2;
+var player_off_x = maxW / 2;
+var player_off_y = maxH / 2;
+
+player_v_x = 0;  // Player velocity
+player_v_y = 0;
 
 
 // World generation parameters
 
-var min_cave_alt = 100       // Minimum distance down for cave
-var cave_chance = 0.001     // Chance of a cave seeding
-var cave_iterations = 40    // Cave-forming iterations
-var cave_spread_chance = 0.05   // Chance of a cave spreading to neighbors during iteration
+var min_cave_alt = 100;      // Minimum distance down for cave
+var cave_chance = 0.001;     // Chance of a cave seeding
+var cave_iterations = 40;    // Cave-forming iterations
+var cave_spread_chance = 0.05;   // Chance of a cave spreading to neighbors during iteration
 
 
 
@@ -159,11 +162,11 @@ function tick() {
 
 
     // Draw screen
-    for (var y = 0; y < pCY; y++){
-        for (var x = 0; x < pCX; x++){
-            if(pA[y + offYP][x + offXP] == 1){
+    for (var y = 0; y <= pCY; y++){
+        for (var x = 0; x <= pCX; x++){
+            if(pA[y + Math.floor(offYP)][x + Math.floor(offXP)] == 1){
                 ctx.fillStyle = "#770000";
-                ctx.fillRect(x * pixS, y * pixS, pixS, pixS);
+                ctx.fillRect((x - offXP % 1) * pixS, (y - offYP % 1) * pixS, pixS, pixS);
             }
             else{
                 ctx.fillStyle = '#777777'
@@ -185,9 +188,18 @@ function tick() {
     var player_index_x = Math.floor(x_coord / pixS)
     var player_index_y = Math.floor(y_coord / pixS)
 
-    if(pA[player_index_y][player_index_x] == 0){
-        offYP += 1;
+    if(pA[player_index_y][player_index_x] == 1){
+        offYP -= .1;
+        player_v_y *= 0.5;
     }
+
+    offXP += player_v_x;
+    offYP += player_v_y;
+
+    player_v_y += 0.01
+
+    player_v_x *= 0.9;
+    player_v_y *= 0.9;
 
 
 
@@ -209,25 +221,37 @@ document.addEventListener('keydown', function(event) {
         case 'ArrowUp':
             // Action for the Up Arrow key
             if(offYP > 0){
-                offYP -= 1;
+                player_v_y -= .1;
+            }
+            else{
+                player_v_y = 0;
             }
             break;
         case 'ArrowDown':
             // Action for the Down Arrow key
             if(offYP < pCYW - pCY){
-                offYP += 1;
+                player_v_y += .1;
+            }
+            else{
+                player_v_y = 0;
             }
             break;
         case 'ArrowLeft':
             // Action for the Left Arrow key
             if(offXP > 0){
-                offXP -= 1;
+                player_v_x -= .1;
+            }
+            else{
+                player_v_x = 0;
             }
             break;
         case 'ArrowRight':
             // Action for the Right Arrow key
             if(offXP < pCXW - pCX){
-                offXP += 1;
+                player_v_x += .1;
+            }
+            else{
+                player_v_x = 0;
             }
             break;
         default:
