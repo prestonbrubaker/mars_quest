@@ -1,5 +1,8 @@
 var c = document.getElementById("canvas1");
 var ctx = c.getContext("2d");
+var spriteSheet = new Image();
+spriteSheet.src = 'poop.png'; // Replace with the path to your sprite sheet
+
 
 // Display settings
 var minW = 0;
@@ -15,7 +18,12 @@ var pCY = Math.floor(maxH / pixS);  // count of pixels across the screen
 var pCXW = 1000;      // count of pixels across the world
 var pCYW = 700;       // count of pixels across the world
 
-
+var frameWidth = 100; // Width of each frame in your sprite sheet
+var frameHeight = 100; // Height of each frame in your sprite sheet
+var totalFrames = 2; // Total number of frames in the sprite sheet
+var currentFrame = 0; // Current frame to display
+var frameCounter = 0;
+var frameSpeed = 5; // Number of ticks between frame changes
 
 
 var pA = new Array(pCY);
@@ -177,10 +185,21 @@ function tick() {
     }
 
     // Draw player
-    ctx.fillStyle = "#00FF00";
-    ctx.fillRect(player_off_x, player_off_y, player_w, -1 * player_h);
+    //ctx.fillStyle = "#00FF00";
+    //ctx.fillRect(player_off_x, player_off_y, player_w, -1 * player_h);
     var x_coord = offXP * pixS + player_off_x
     var y_coord = offYP * pixS + player_off_y
+
+    var sourceX = currentFrame * frameWidth;
+    ctx.drawImage(spriteSheet, sourceX, 0, frameWidth, frameHeight, player_off_x, player_off_y - frameHeight, frameWidth, frameHeight);
+    frameCounter++;
+    if (frameCounter >= frameSpeed) {
+        currentFrame++;
+        frameCounter = 0;
+    }
+    if (currentFrame >= totalFrames) {
+        currentFrame = 0;
+    }
 
     // Draw ref
     ctx.fillStyle = "#000000";
