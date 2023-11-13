@@ -26,14 +26,15 @@ var cloneA = new Array(pCY);
 // Character
 
 var offXP = 0;  //offset of pixels
-var offYP = 0;  //offset of pixels
+var offYP = 20;  //offset of pixels
 
 
 var tickS = 100;
 
 function genWorld() {
+    // Create surface layer
     pAinv = new Array(pCXW)
-    var alt = 50
+    var alt = 70
     var altV = 0
     for (var x = 0; x < pCXW; x++){
         temp_y = new Array(pCYW);
