@@ -15,3 +15,34 @@ body {
     margin-bottom: 2rem;
     color: rgb(158, 91, 91);
 }
+
+/* Base styling for mobile control buttons */
+#mobile-controls button {
+    background-color: #4CAF50; /* Green background */
+    color: white; /* White text */
+    border: none; /* No border */
+    padding: 15px 32px; /* Padding for larger touch area */
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px; /* Larger font size for readability */
+    margin: 4px 2px; /* Spacing between buttons */
+    cursor: pointer; /* Cursor indicates it's clickable */
+    border-radius: 4px; /* Rounded corners */
+}
+
+/* Position the mobile controls div */
+#mobile-controls {
+    position: fixed; /* Fixed at the bottom */
+    left: 50%; /* Center horizontally */
+    bottom: 10px; /* 10px from the bottom */
+    transform: translateX(-50%); /* Center align */
+    display: none; /* Hidden by default */
+}
+
+/* Show the controls on mobile devices */
+@media screen and (max-width: 600px) {
+    #mobile-controls {
+        display: block;
+    }
+}

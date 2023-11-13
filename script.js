@@ -274,7 +274,31 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
+function setupMobileControls() {
+    var upButton = document.getElementById('up-button');
+    var downButton = document.getElementById('down-button');
+    var leftButton = document.getElementById('left-button');
+    var rightButton = document.getElementById('right-button');
 
+    upButton.addEventListener('touchstart', function() {
+        if(offYP > 0) player_v_y -= player_acc_y;
+    });
+
+    downButton.addEventListener('touchstart', function() {
+        if(offYP < pCYW - pCY) player_v_y += player_acc_y;
+    });
+
+    leftButton.addEventListener('touchstart', function() {
+        if(offXP > 0) player_v_x -= player_acc_x;
+    });
+
+    rightButton.addEventListener('touchstart', function() {
+        if(offXP < pCXW - pCX) player_v_x += player_acc_x;
+    });
+}
+
+// Call this function once the page has loaded
+document.addEventListener('DOMContentLoaded', setupMobileControls);
 
 
 
