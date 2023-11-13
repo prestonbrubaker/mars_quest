@@ -28,6 +28,11 @@ var cloneA = new Array(pCY);
 var offXP = 0;  //offset of pixels
 var offYP = 20;  //offset of pixels
 
+var player_w = pixS
+var player_h = pixS * 2
+var player_off_x = maxW / 2
+var player_off_y = maxH / 2
+
 
 // World generation parameters
 
@@ -165,6 +170,35 @@ function tick() {
             }
         }
     }
+
+    // Draw player
+    ctx.fillStyle = "#00FF00";
+    ctx.fillRect(player_off_x,player_off_y,player_w,player_h);
+    var x_coord = offXP * pixS + player_off_x
+    var y_coord = offYP * pixS + player_off_y
+
+
+    
+
+
+    // Physics
+    var player_index_x = Math.floor(x_coord / pixS)
+    var player_index_y = Math.floor(y_coord / pixS)
+
+    if(pA[player_index_y][player_index_x] == 0){
+        offYP += 1;
+    }
+
+
+
+
+    // Write troubleshooting info
+    ctx.fillStyle = "#000000";
+    ctx.fillText("X-Value of Player: " + x_coord, 10, 10)
+    ctx.fillText("Y-Value of Player: " + y_coord, 10, 20)
+    ctx.fillText("X-index of Player: " + player_index_x, 10, 30)
+    ctx.fillText("Y-index of Player: " + player_index_y, 10, 40)
+
 
 }
 
