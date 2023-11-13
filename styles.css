@@ -1,1 +1,15 @@
+@font-face {
+    font-family: 'space';
+    src: url(space.ttf), format(truetype);
+}
 
+
+
+body {
+    .header {
+        font-family: 'space', sans-serif;
+        font-size: 2.5rem;
+        margin-bottom: 2rem;
+    }
+    text-align: center;
+}
