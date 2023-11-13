@@ -252,42 +252,22 @@ c.addEventListener('click', function(event) {
 
 // Get key value
 document.addEventListener('keydown', function(event) {
-    switch(event.key) {
-        case 'ArrowUp':
-            // Action for the Up Arrow key
-            if(offYP > 0){
-                player_v_y -= player_acc_y;
-            }
-            else{
-                player_v_y = 0;
-            }
+    switch(event.key.toLowerCase()) {
+        case 'w': // up
+            if(offYP > 0) player_v_y -= player_acc_y;
+            else player_v_y = 0;
             break;
-        case 'ArrowDown':
-            // Action for the Down Arrow key
-            if(offYP < pCYW - pCY){
-                player_v_y += player_acc_y;
-            }
-            else{
-                player_v_y = 0;
-            }
+        case 's': // down
+            if(offYP < pCYW - pCY) player_v_y += player_acc_y;
+            else player_v_y = 0;
             break;
-        case 'ArrowLeft':
-            // Action for the Left Arrow key
-            if(offXP > 0){
-                player_v_x -= player_acc_x;
-            }
-            else{
-                player_v_x = 0;
-            }
+        case 'a': // left
+            if(offXP > 0) player_v_x -= player_acc_x;
+            else player_v_x = 0;
             break;
-        case 'ArrowRight':
-            // Action for the Right Arrow key
-            if(offXP < pCXW - pCX){
-                player_v_x += player_acc_x;
-            }
-            else{
-                player_v_x = 0;
-            }
+        case 'd': // right
+            if(offXP < pCXW - pCX) player_v_x += player_acc_x;
+            else player_v_x = 0;
             break;
         default:
             // Action for any other key
