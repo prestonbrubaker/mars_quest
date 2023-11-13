@@ -15,9 +15,18 @@ var pCY = Math.floor(maxH / pixS);  // count of pixels across the screen
 var pCXW = 1000;      // count of pixels across the world
 var pCYW = 700;       // count of pixels across the world
 
+
+
+
 var pA = new Array(pCY);
 
 var cloneA = new Array(pCY);
+
+
+// Character
+
+var offXP = 0;  //offset of pixels
+var offYP = 0;  //offset of pixels
 
 
 var tickS = 100;
@@ -60,15 +69,16 @@ function genWorld() {
 
 
 function tick() {
-    genWorld();
     // Clear and fill background
     ctx.clearRect(minW, minH, maxW, maxH);
     ctx.fillStyle = bgHue;
     ctx.fillRect(minW, minH, maxW, maxH);
 
+
+    // Draw screen
     for (var y = 0; y < pCY; y++){
         for (var x = 0; x < pCX; x++){
-            if(pA[y][x] == 0){
+            if(pA[y + offYP][x + offXP] == 0){
                 ctx.fillStyle = "#770000";
                 ctx.fillRect(x * pixS, y * pixS, pixS, pixS);
             }
@@ -79,6 +89,42 @@ function tick() {
     }
 
 }
+
+
+
+document.addEventListener('keydown', function(event) {
+    switch(event.key) {
+        case 'ArrowUp':
+            // Action for the Up Arrow key
+            if(offYP > 0){
+                offYP -= 1;
+            }
+            break;
+        case 'ArrowDown':
+            // Action for the Down Arrow key
+            if(offYP < pCYW - pCY){
+                offYP += 1;
+            }
+            break;
+        case 'ArrowLeft':
+            // Action for the Left Arrow key
+            if(offXP > 0){
+                offXP -= 1;
+            }
+            break;
+        case 'ArrowRight':
+            // Action for the Right Arrow key
+            if(offXP < pCXW - pCX){
+                offXP += 1;
+            }
+            break;
+        default:
+            // Action for any other key
+    }
+});
+
+
+
 
 
 // Initialize
