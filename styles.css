@@ -3,14 +3,14 @@
     src: url(space.ttf), format(truetype);
 }
 
-
-
 body {
     text-align: center;
-    
+    display: block;
+
     .header {
         font-family: 'space', sans-serif;
         font-size: 2.5rem;
         margin-bottom: 2rem;
+        color: rgb(158, 91, 91);
     }
 }
