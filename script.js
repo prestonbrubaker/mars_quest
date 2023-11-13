@@ -28,7 +28,7 @@ var cloneA = new Array(pCY);
 var offXP = 0;  //offset of pixels
 var offYP = 20;  //offset of pixels
 
-var player_w = pixS;
+var player_w = pixS - 2;
 var player_h = pixS * 2;
 var player_off_x = maxW / 2;
 var player_off_y = maxH / 2;
@@ -36,6 +36,8 @@ var player_off_y = maxH / 2;
 player_v_x = 0;  // Player velocity
 player_v_y = 0;
 
+player_acc_x = 0.5; // Amount of acceleration for each key press
+player_acc_y = 3;
 
 // World generation parameters
 
@@ -180,6 +182,10 @@ function tick() {
     var x_coord = offXP * pixS + player_off_x
     var y_coord = offYP * pixS + player_off_y
 
+    // Draw ref
+    ctx.fillStyle = "#000000";
+    ctx.fillRect(player_off_x, player_off_y, 1, 1);
+
 
     
 
@@ -188,15 +194,29 @@ function tick() {
     var player_index_x = Math.floor(x_coord / pixS)
     var player_index_y = Math.floor(y_coord / pixS)
 
-    if(pA[player_index_y][player_index_x] == 1){
-        offYP -= .1;
+
+    // Collision with ground and gravity
+    if(pA[Math.floor(player_index_y + 0.1)][player_index_x] == 1){
+        offYP = Math.floor(offYP)
+        offYP -= 0;
         player_v_y *= 0.5;
+    }
+    else{
+        player_v_y += 0.1
+    }
+
+    // Collision with walls
+    if(pA[player_index_y - 1][Math.ceil(x_coord / pixS)] == 1){
+        offXP = Math.floor(offXP);
+    }
+    if(pA[player_index_y - 1][Math.floor(x_coord / pixS)] == 1){
+        offXP = Math.ceil(offXP);
     }
 
     offXP += player_v_x;
     offYP += player_v_y;
 
-    player_v_y += 0.01
+
 
     player_v_x *= 0.9;
     player_v_y *= 0.9;
@@ -216,12 +236,27 @@ function tick() {
 
 
 
+// Get values of click
+c.addEventListener('click', function(event) {
+    var rect = c.getBoundingClientRect();
+    var x = event.clientX - rect.left;
+    var y = event.clientY - rect.top;
+    x_index = Math.floor(x / pixS + offXP);
+    y_index = Math.floor(y / pixS + offYP);
+
+    pA[y_index][x_index] = 0;
+
+});
+
+
+
+// Get key value
 document.addEventListener('keydown', function(event) {
     switch(event.key) {
         case 'ArrowUp':
             // Action for the Up Arrow key
             if(offYP > 0){
-                player_v_y -= .1;
+                player_v_y -= player_acc_y;
             }
             else{
                 player_v_y = 0;
@@ -230,7 +265,7 @@ document.addEventListener('keydown', function(event) {
         case 'ArrowDown':
             // Action for the Down Arrow key
             if(offYP < pCYW - pCY){
-                player_v_y += .1;
+                player_v_y += player_acc_y;
             }
             else{
                 player_v_y = 0;
@@ -239,7 +274,7 @@ document.addEventListener('keydown', function(event) {
         case 'ArrowLeft':
             // Action for the Left Arrow key
             if(offXP > 0){
-                player_v_x -= .1;
+                player_v_x -= player_acc_x;
             }
             else{
                 player_v_x = 0;
@@ -248,7 +283,7 @@ document.addEventListener('keydown', function(event) {
         case 'ArrowRight':
             // Action for the Right Arrow key
             if(offXP < pCXW - pCX){
-                player_v_x += .1;
+                player_v_x += player_acc_x;
             }
             else{
                 player_v_x = 0;
