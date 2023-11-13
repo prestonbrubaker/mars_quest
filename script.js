@@ -29,6 +29,18 @@ var offXP = 0;  //offset of pixels
 var offYP = 20;  //offset of pixels
 
 
+// World generation parameters
+
+var min_cave_alt = 100       // Minimum distance down for cave
+var cave_chance = 0.001     // Chance of a cave seeding
+var cave_iterations = 40    // Cave-forming iterations
+var cave_spread_chance = 0.05   // Chance of a cave spreading to neighbors during iteration
+
+
+
+// World elements 0 = air, 1 = mars soil
+
+
 var tickS = 100;
 
 function genWorld() {
@@ -48,10 +60,10 @@ function genWorld() {
             r = Math.random();
 
             if(y < alt){
-                temp_y[y] = 1;
+                temp_y[y] = 0;
             }
             else{
-                temp_y[y] = 0;
+                temp_y[y] = 1;
             }
         }
         pAinv[x] = temp_y
@@ -64,6 +76,71 @@ function genWorld() {
             temp_x[x] = pAinv[x][y]
         }
         pA[y] = temp_x
+    }
+
+    // Cave generation - seeding
+
+    for(var y = min_cave_alt; y < pCYW - 1; y++){
+        for(var x = 1; x < pCXW - 1; x++){
+            r = Math.random()
+            if(pA[y][x] == 1 & r < cave_chance){
+                pA[y][x] = 0
+            }
+        }
+    }
+
+    // Cave generation - expanding
+
+    for(var i = 0; i < cave_iterations; i++){
+        for(var y = min_cave_alt; y < pCYW - 1; y++){
+            for(var x = 1; x < pCXW - 1; x++){
+                if(pA[y][x] == 0){
+                    continue;
+                }
+                neighborC = 0
+                for(y_check = -1; y_check <= 1; y_check++){
+                    for(x_check = -1; x_check <= 1; x_check++){
+                        if(y_check == 0 & x_check == 0){
+                            continue;
+                        }
+                        if(pA[y + y_check][x + x_check] == 0){
+                            neighborC++;
+                        }
+
+                    }
+                }
+                r = Math.random()
+                if(r < cave_spread_chance * neighborC){
+                    pA[y][x] = 0;
+                }
+            }
+        }
+    }
+
+    // Cave generation - remove isolated blocks
+    for(var i = 0; i < cave_iterations; i++){
+        for(var y = min_cave_alt; y < pCYW - 1; y++){
+            for(var x = 1; x < pCXW - 1; x++){
+                if(pA[y][x] == 0){
+                    continue;
+                }
+                neighborC = 0
+                for(y_check = -1; y_check <= 1; y_check++){
+                    for(x_check = -1; x_check <= 1; x_check++){
+                        if(y_check == 0 & x_check == 0){
+                            continue;
+                        }
+                        if(pA[y + y_check][x + x_check] == 0){
+                            neighborC++;
+                        }
+
+                    }
+                }
+                if(neighborC > 7){
+                    pA[y][x] = 0;
+                }
+            }
+        }
     }
 
 }
@@ -79,7 +156,7 @@ function tick() {
     // Draw screen
     for (var y = 0; y < pCY; y++){
         for (var x = 0; x < pCX; x++){
-            if(pA[y + offYP][x + offXP] == 0){
+            if(pA[y + offYP][x + offXP] == 1){
                 ctx.fillStyle = "#770000";
                 ctx.fillRect(x * pixS, y * pixS, pixS, pixS);
             }
