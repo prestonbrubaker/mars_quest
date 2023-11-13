@@ -41,7 +41,9 @@ function tick() {
 
     for (var x = 0; x < pCX; x++){
         for (var y = 0; y < pCY; y++){
-            
+            if(pA[y][x] == 1){
+                ctx.fillRect(x * pixS, y * pixS, pixS, pixS);
+            }
         }
     }
 
