@@ -185,8 +185,8 @@ function tick() {
     }
 
     // Draw player
-    ctx.fillStyle = "#00FF00";
-    ctx.fillRect(player_off_x, player_off_y, player_w, -1 * player_h);
+    //ctx.fillStyle = "#00FF00";
+    //ctx.fillRect(player_off_x, player_off_y, player_w, -1 * player_h);
     var x_coord = offXP * pixS + player_off_x
     var y_coord = offYP * pixS + player_off_y
 
