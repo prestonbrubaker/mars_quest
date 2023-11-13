@@ -18,8 +18,8 @@ var pCY = Math.floor(maxH / pixS);  // count of pixels across the screen
 var pCXW = 1000;      // count of pixels across the world
 var pCYW = 700;       // count of pixels across the world
 
-var frameWidth = 100; // Width of each frame in your sprite sheet
-var frameHeight = 100; // Height of each frame in your sprite sheet
+var frameWidth = 52; // Width of each frame in your sprite sheet
+var frameHeight = 70; // Height of each frame in your sprite sheet
 var totalFrames = 2; // Total number of frames in the sprite sheet
 var currentFrame = 0; // Current frame to display
 var frameCounter = 0;
@@ -34,7 +34,7 @@ var cloneA = new Array(pCY);
 // Character
 
 var offXP = 0;  //offset of pixels
-var offYP = 20;  //offset of pixels
+var offYP = 0;  //offset of pixels
 
 var player_w = pixS - 2;
 var player_h = pixS * 2;
