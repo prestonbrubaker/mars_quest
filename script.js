@@ -41,8 +41,12 @@ function tick() {
 
     for (var x = 0; x < pCX; x++){
         for (var y = 0; y < pCY; y++){
-            if(pA[y][x] == 1){
+            if(pA[y][x] == 0){
+                ctx.fillStyle = "#770000";
                 ctx.fillRect(x * pixS, y * pixS, pixS, pixS);
+            }
+            else{
+                ctx.fillStyle = '#777777'
             }
         }
     }
