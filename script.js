@@ -24,11 +24,11 @@ var tickS = 100;
 
 function genWorld() {
     pAinv = new Array(pCXW)
-    var alt = 20
+    var alt = 50
     var altV = 0
     for (var x = 0; x < pCXW; x++){
         temp_y = new Array(pCYW);
-        altV += (Math.random() - .5) * .1
+        altV += (Math.random() - .5) * .5
         alt += altV
         altV *= .9
         for (var y = 0; y < pCYW; y++){
