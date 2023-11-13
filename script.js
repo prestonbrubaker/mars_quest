@@ -31,6 +31,9 @@ function genWorld() {
         altV += (Math.random() - .5) * .5
         alt += altV
         altV *= .9
+        if(alt < 0){
+            alt = 0
+        }
         for (var y = 0; y < pCYW; y++){
             r = Math.random();
 
