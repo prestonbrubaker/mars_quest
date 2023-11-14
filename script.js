@@ -218,6 +218,9 @@ function tick() {
 
     // Collision with ground and gravity (left detector and right detector)
     if(pA[Math.floor(player_index_y + 0.1)][Math.floor(x_coord / pixS - player_w / 2 / pixS)] == 1 || pA[Math.floor(player_index_y + 0.1)][Math.floor(x_coord / pixS + player_w / 2 / pixS)] == 1){
+        if(offYP % 1 > 0.5){
+            offYP -= 1;
+        }
         offYP = Math.floor(offYP)
         offYP -= 0;
         player_v_y *= 0.5;
@@ -229,21 +232,25 @@ function tick() {
     // Collision with walls (left detector)
     if(pA[player_index_y - 1][Math.ceil(x_coord / pixS - player_w / 2 / pixS)] == 1){
         offXP = Math.floor(offXP);
+        offXP -= .1;
         player_v_x *= -0.5;
     }
     if(pA[player_index_y - 1][Math.floor(x_coord / pixS - player_w / 2 / pixS)] == 1){
         offXP = Math.ceil(offXP);
+        offXP += .1;
         player_v_x *= -0.5;
     }
 
     // Collision with walls (right detector)
     if(pA[player_index_y - 1][Math.ceil(x_coord / pixS + player_w / 2 / pixS)] == 1){
         offXP = Math.floor(offXP);
+        offXP -= .1;
         player_v_x *= -0.5;
     }
     if(pA[player_index_y - 1][Math.floor(x_coord / pixS + player_w / 2 / pixS)] == 1){
         offXP = Math.ceil(offXP);
         player_v_x *= -0.5;
+        offXP += .1;
     }
 
 
