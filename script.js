@@ -57,6 +57,7 @@ var cave_spread_chance = 0.05;   // Chance of a cave spreading to neighbors duri
 
 
 // World elements 0 = air, 1 = mars soil
+elHues = ["#000000", "#770000", "#440000"];
 
 
 var tickS = 50;
@@ -81,7 +82,13 @@ function genWorld() {
                 temp_y[y] = 0;
             }
             else{
-                temp_y[y] = 1;
+                r2 = Math.random();
+                if(r2 > .2){
+                    temp_y[y] = 1;
+                }
+                else{
+                    temp_y[y] = 2;
+                }
             }
         }
         pAinv[x] = temp_y
@@ -101,7 +108,7 @@ function genWorld() {
     for(var y = min_cave_alt; y < pCYW - 1; y++){
         for(var x = 1; x < pCXW - 1; x++){
             r = Math.random()
-            if(pA[y][x] == 1 & r < cave_chance){
+            if(pA[y][x] > 0 & r < cave_chance){
                 pA[y][x] = 0
             }
         }
@@ -174,12 +181,14 @@ function tick() {
     // Draw screen
     for (var y = 0; y <= pCY; y++){
         for (var x = 0; x <= pCX; x++){
-            if(pA[y + Math.floor(offYP)][x + Math.floor(offXP)] == 1){
-                ctx.fillStyle = "#770000";
+            var x_index = x + Math.floor(offXP)
+            var y_index = y + Math.floor(offYP)
+            if(pA[y_index][x_index] != 0){
+                ctx.fillStyle = elHues[pA[y_index][x_index]];
                 ctx.fillRect((x - offXP % 1) * pixS, (y - offYP % 1) * pixS, pixS, pixS);
             }
             else{
-                ctx.fillStyle = '#777777'
+                
             }
         }
     }
@@ -221,7 +230,7 @@ function tick() {
 
 
     // Collision with ground and gravity (left detector and right detector)
-    if(pA[Math.floor(player_index_y + 0.1)][Math.floor(x_coord / pixS - player_w / 2 / pixS)] == 1 || pA[Math.floor(player_index_y + 0.1)][Math.floor(x_coord / pixS + player_w / 2 / pixS)] == 1){
+    if(pA[Math.floor(player_index_y + 0.1)][Math.floor(x_coord / pixS - player_w / 2 / pixS)] > 0 || pA[Math.floor(player_index_y + 0.1)][Math.floor(x_coord / pixS + player_w / 2 / pixS)] > 0){
         if(offYP % 1 > 0.5){
             offYP -= 1;
         }
@@ -233,49 +242,59 @@ function tick() {
         player_v_y += 0.1
     }
 
+    // Collision with ceiling (upper-left detector and right detector)
+    if(pA[Math.floor(player_index_y - player_h / pixS - 0.1)][Math.floor(x_coord / pixS - player_w / 2 / pixS)] > 0 || pA[Math.floor(player_index_y - player_h / pixS - 0.1)][Math.floor(x_coord / pixS + player_w / 2 / pixS)] > 0){
+        if(offYP % 1 < 0.5){
+            offYP += 1;
+        }
+        offYP = Math.ceil(offYP)
+        offYP += 0;
+        player_v_y *= 0.5;
+    }
+
     // Collision with walls (left detector)
-    if(pA[player_index_y - 1][Math.floor(x_coord / pixS - player_w / 2 / pixS + .2)] == 1){
+    if(pA[player_index_y - 1][Math.floor(x_coord / pixS - player_w / 2 / pixS + .2)] > 0){
         offXP = Math.floor(offXP);
         //offXP -= .1;
         player_v_x *= -0.2;
     }
-    if(pA[player_index_y - 1][Math.floor(x_coord / pixS - player_w / 2 / pixS - .2)] == 1){
+    if(pA[player_index_y - 1][Math.floor(x_coord / pixS - player_w / 2 / pixS - .2)] > 0){
         offXP = Math.ceil(offXP);
         //offXP += .1;
         player_v_x *= -0.2;
     }
 
     // Collision with walls (right detector)
-    if(pA[player_index_y - 1][Math.floor(x_coord / pixS + player_w / 2 / pixS + .2)] == 1){
+    if(pA[player_index_y - 1][Math.floor(x_coord / pixS + player_w / 2 / pixS + .2)] > 0){
         offXP = Math.floor(offXP);
         //offXP -= .1;
         player_v_x *= -0.2;
     }
-    if(pA[player_index_y - 1][Math.floor(x_coord / pixS + player_w / 2 / pixS - .2)] == 1){
+    if(pA[player_index_y - 1][Math.floor(x_coord / pixS + player_w / 2 / pixS - .2)] > 0){
         offXP = Math.ceil(offXP);
         //player_v_x *= -0.2;
         offXP += .1;
     }
 
     // Collision with walls (upper-left detector)
-    if(pA[Math.floor(player_index_y - 1 - player_h / pixS)][Math.floor(x_coord / pixS - player_w / 2 / pixS + .2)] == 1){
+    if(pA[Math.floor(player_index_y - 1 - player_h / pixS)][Math.floor(x_coord / pixS - player_w / 2 / pixS + .2)] > 0){
         offXP = Math.floor(offXP);
         //offXP -= .1;
         player_v_x *= -0.2;
     }
-    if(pA[Math.floor(player_index_y - 1 - player_h / pixS)][Math.floor(x_coord / pixS - player_w / 2 / pixS - .2)] == 1){
+    if(pA[Math.floor(player_index_y - 1 - player_h / pixS)][Math.floor(x_coord / pixS - player_w / 2 / pixS - .2)] > 0){
         offXP = Math.ceil(offXP);
         player_v_x *= -0.2;
         //offXP += .1;
     }
 
     // Collision with walls (upper-right detector)
-    if(pA[Math.floor(player_index_y - 1 - player_h / pixS)][Math.floor(x_coord / pixS + player_w / 2 / pixS + .2)] == 1){
+    if(pA[Math.floor(player_index_y - 1 - player_h / pixS)][Math.floor(x_coord / pixS + player_w / 2 / pixS + .2)] > 0){
         offXP = Math.floor(offXP);
         //offXP -= .1;
         player_v_x *= -0.2;
     }
-    if(pA[Math.floor(player_index_y - 1 - player_h / pixS)][Math.floor(x_coord / pixS + player_w / 2 / pixS - .2)] == 1){
+    if(pA[Math.floor(player_index_y - 1 - player_h / pixS)][Math.floor(x_coord / pixS + player_w / 2 / pixS - .2)] > 0){
         offXP = Math.ceil(offXP);
         player_v_x *= -0.2;
         //offXP += .1;
