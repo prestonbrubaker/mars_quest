@@ -315,7 +315,7 @@ document.addEventListener('keydown', function(event) {
             else player_v_y = 0;
             break;
         case 's': // down
-            if(offYP < pCYW - pCY) player_v_y += player_acc_y;
+            if(offYP < pCYW - pCY) player_v_y += player_acc_x;
             else player_v_y = 0;
             break;
         case 'a': // left
