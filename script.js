@@ -34,7 +34,7 @@ var cloneA = new Array(pCY);
 // Character
 
 var offXP = 0;  //offset of pixels
-var offYP = 0;  //offset of pixels
+var offYP = 100;  //offset of pixels
 
 var player_w = pixS - 2;
 var player_h = pixS * 2;
@@ -49,7 +49,7 @@ var player_acc_y = 1.5;
 
 // World generation parameters
 
-var min_cave_alt = 100;      // Minimum distance down for cave
+var min_cave_alt = 190;      // Minimum distance down for cave
 var cave_chance = 0.001;     // Chance of a cave seeding
 var cave_iterations = 40;    // Cave-forming iterations
 var cave_spread_chance = 0.05;   // Chance of a cave spreading to neighbors during iteration
@@ -64,13 +64,13 @@ var tickS = 50;
 function genWorld() {
     // Create surface layer
     pAinv = new Array(pCXW)
-    var alt = 70
+    var alt = 150
     var altV = 0
     for (var x = 0; x < pCXW; x++){
         temp_y = new Array(pCYW);
         altV += (Math.random() - .5) * .5
         alt += altV
-        altV *= .9
+        altV *= .8
         if(alt < 0){
             alt = 0
         }
