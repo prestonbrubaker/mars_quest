@@ -41,11 +41,11 @@ var player_h = pixS * 2;
 var player_off_x = maxW / 2;
 var player_off_y = maxH / 2;
 
-player_v_x = 0;  // Player velocity
-player_v_y = 0;
+var player_v_x = 0;  // Player velocity
+var player_v_y = 0;
 
-player_acc_x = 0.5; // Amount of acceleration for each key press
-player_acc_y = 3;
+var player_acc_x = 0.5; // Amount of acceleration for each key press
+var player_acc_y = 1.5;
 
 // World generation parameters
 
@@ -59,7 +59,7 @@ var cave_spread_chance = 0.05;   // Chance of a cave spreading to neighbors duri
 // World elements 0 = air, 1 = mars soil
 
 
-var tickS = 100;
+var tickS = 50;
 
 function genWorld() {
     // Create surface layer
@@ -203,7 +203,7 @@ function tick() {
 
     // Draw ref
     ctx.fillStyle = "#000000";
-    ctx.fillRect(player_off_x, player_off_y, 1, 1);
+    ctx.fillRect(player_off_x - 2, player_off_y - 2, 4, 4);
 
 
     
@@ -232,10 +232,23 @@ function tick() {
         offXP = Math.ceil(offXP);
     }
 
+
     offXP += player_v_x;
     offYP += player_v_y;
 
-
+    // Keep player in bounds
+    if(offXP < 0){
+        offXP = 0;
+    }
+    if(offXP > pCXW - pCX){
+        offXP = pCXW - pCX;
+    }
+    if(offYP < 0){
+        offYP = 0;
+    }
+    if(offYP > pCYW - pCY - 1){
+        offYP = pCYW - pCY - 1;
+    }
 
     player_v_x *= 0.9;
     player_v_y *= 0.9;
