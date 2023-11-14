@@ -36,8 +36,8 @@ var cloneA = new Array(pCY);
 var offXP = 0;  //offset of pixels
 var offYP = 100;  //offset of pixels
 
-var player_w = 20;
-var player_h = pixS * 2;
+var player_w = 30;
+var player_h = 70;
 var player_off_x = maxW / 2;
 var player_off_y = maxH / 2;
 
@@ -202,10 +202,14 @@ function tick() {
     }
 
     // Draw ref
-    ctx.fillStyle = "#000000";
+    ctx.fillStyle = "#FF00FF";
     ctx.fillRect(player_off_x - 2 - player_w / 2, player_off_y - 2, 4, 4);
 
     ctx.fillRect(player_off_x - 2 + player_w / 2, player_off_y - 2, 4, 4);
+
+    ctx.fillRect(player_off_x - 2 - player_w / 2, player_off_y - 2 - player_h, 4, 4);
+
+    ctx.fillRect(player_off_x - 2 + player_w / 2, player_off_y - 2 - player_h, 4, 4);
 
 
     
@@ -230,27 +234,51 @@ function tick() {
     }
 
     // Collision with walls (left detector)
-    if(pA[player_index_y - 1][Math.ceil(x_coord / pixS - player_w / 2 / pixS)] == 1){
+    if(pA[player_index_y - 1][Math.floor(x_coord / pixS - player_w / 2 / pixS + .2)] == 1){
         offXP = Math.floor(offXP);
-        offXP -= .1;
-        player_v_x *= -0.5;
+        //offXP -= .1;
+        player_v_x *= -0.2;
     }
-    if(pA[player_index_y - 1][Math.floor(x_coord / pixS - player_w / 2 / pixS)] == 1){
+    if(pA[player_index_y - 1][Math.floor(x_coord / pixS - player_w / 2 / pixS - .2)] == 1){
         offXP = Math.ceil(offXP);
-        offXP += .1;
-        player_v_x *= -0.5;
+        //offXP += .1;
+        player_v_x *= -0.2;
     }
 
     // Collision with walls (right detector)
-    if(pA[player_index_y - 1][Math.ceil(x_coord / pixS + player_w / 2 / pixS)] == 1){
+    if(pA[player_index_y - 1][Math.floor(x_coord / pixS + player_w / 2 / pixS + .2)] == 1){
         offXP = Math.floor(offXP);
-        offXP -= .1;
-        player_v_x *= -0.5;
+        //offXP -= .1;
+        player_v_x *= -0.2;
     }
-    if(pA[player_index_y - 1][Math.floor(x_coord / pixS + player_w / 2 / pixS)] == 1){
+    if(pA[player_index_y - 1][Math.floor(x_coord / pixS + player_w / 2 / pixS - .2)] == 1){
         offXP = Math.ceil(offXP);
-        player_v_x *= -0.5;
+        //player_v_x *= -0.2;
         offXP += .1;
+    }
+
+    // Collision with walls (upper-left detector)
+    if(pA[Math.floor(player_index_y - 1 - player_h / pixS)][Math.floor(x_coord / pixS - player_w / 2 / pixS + .2)] == 1){
+        offXP = Math.floor(offXP);
+        //offXP -= .1;
+        player_v_x *= -0.2;
+    }
+    if(pA[Math.floor(player_index_y - 1 - player_h / pixS)][Math.floor(x_coord / pixS - player_w / 2 / pixS - .2)] == 1){
+        offXP = Math.ceil(offXP);
+        player_v_x *= -0.2;
+        //offXP += .1;
+    }
+
+    // Collision with walls (upper-right detector)
+    if(pA[Math.floor(player_index_y - 1 - player_h / pixS)][Math.floor(x_coord / pixS + player_w / 2 / pixS + .2)] == 1){
+        offXP = Math.floor(offXP);
+        //offXP -= .1;
+        player_v_x *= -0.2;
+    }
+    if(pA[Math.floor(player_index_y - 1 - player_h / pixS)][Math.floor(x_coord / pixS + player_w / 2 / pixS - .2)] == 1){
+        offXP = Math.ceil(offXP);
+        player_v_x *= -0.2;
+        //offXP += .1;
     }
 
 
@@ -301,7 +329,17 @@ c.addEventListener('click', function(event) {
     x_index = Math.floor(x / pixS + offXP);
     y_index = Math.floor(y / pixS + offYP);
 
-    pA[y_index][x_index] = 0;
+    for(var y_it = -2; y_it <= 2; y_it++){
+        for(var x_it = -2; x_it <= 2; x_it++){
+            if(y_index + y_it > pCYW || y_index + y_it < 0 || x_index + x_it > pCXW || x_index + x_it < 0){
+                continue;
+            }
+
+            pA[y_index + y_it][x_index + x_it] = 0;
+        }
+    }
+
+
 
 });
 
