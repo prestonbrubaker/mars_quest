@@ -19,7 +19,7 @@ body {
 
 /* Base styling for mobile control buttons */
 #mobile-controls button {
-    background-color: hotpink; 
+    background-color: #770000; 
     color: white; 
     border: none; 
     padding: 15px 32px; 
