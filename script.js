@@ -1,7 +1,7 @@
 var c = document.getElementById("canvas1");
 var ctx = c.getContext("2d");
 var spriteSheet = new Image();
-spriteSheet.src = 'poop.png'; // Replace with the path to your sprite sheet
+spriteSheet.src = 'poopright.png'; // Replace with the path to your sprite sheet
 
 
 // Display settings
