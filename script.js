@@ -334,7 +334,9 @@ c.addEventListener('click', function(event) {
             if(y_index + y_it > pCYW || y_index + y_it < 0 || x_index + x_it > pCXW || x_index + x_it < 0){
                 continue;
             }
-
+            if(x_it ** 2 + y_it ** 2 > 5){
+                continue;
+            }
             pA[y_index + y_it][x_index + x_it] = 0;
         }
     }
