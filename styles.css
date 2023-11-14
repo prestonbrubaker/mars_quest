@@ -18,6 +18,11 @@ body {
     text-shadow: -3px 3px 0px yellow;
 }
 
+#canvas1 {
+    border: 2px solid yellow;
+}
+
+
 /* Base styling for mobile control buttons */
 #mobile-controls button {
     background-color: #770000; 
