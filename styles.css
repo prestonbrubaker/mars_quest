@@ -7,13 +7,14 @@
 body {
     text-align: center;
     display: block;
+    background-color: black;
 }
 
 .header {
     font-family: 'space', sans-serif;
-    font-size: 2.5rem;
+    font-size: 3.5rem;
     margin-bottom: 2rem;
-    color: rgb(158, 91, 91);
+    color: #770000;
 }
 
 /* Base styling for mobile control buttons */
@@ -25,7 +26,6 @@ body {
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 16px; 
     margin: 4px 2px; 
     cursor: pointer; 
     border-radius: 4px; 
@@ -37,7 +37,7 @@ body {
     left: 50%; 
     bottom: 10px; 
     transform: translateX(-50%); 
-    display: none; /* Hidden by default */
+    display: none;
 }
 
 /* Show the controls on mobile devices */
