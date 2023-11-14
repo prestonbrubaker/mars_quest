@@ -36,7 +36,7 @@ var cloneA = new Array(pCY);
 var offXP = 0;  //offset of pixels
 var offYP = 100;  //offset of pixels
 
-var player_w = pixS - 2;
+var player_w = 20;
 var player_h = pixS * 2;
 var player_off_x = maxW / 2;
 var player_off_y = maxH / 2;
@@ -203,7 +203,9 @@ function tick() {
 
     // Draw ref
     ctx.fillStyle = "#000000";
-    ctx.fillRect(player_off_x - 2, player_off_y - 2, 4, 4);
+    ctx.fillRect(player_off_x - 2 - player_w / 2, player_off_y - 2, 4, 4);
+
+    ctx.fillRect(player_off_x - 2 + player_w / 2, player_off_y - 2, 4, 4);
 
 
     
@@ -214,8 +216,8 @@ function tick() {
     var player_index_y = Math.floor(y_coord / pixS)
 
 
-    // Collision with ground and gravity
-    if(pA[Math.floor(player_index_y + 0.1)][player_index_x] == 1){
+    // Collision with ground and gravity (left detector and right detector)
+    if(pA[Math.floor(player_index_y + 0.1)][Math.floor(x_coord / pixS - player_w / 2 / pixS)] == 1 || pA[Math.floor(player_index_y + 0.1)][Math.floor(x_coord / pixS + player_w / 2 / pixS)] == 1){
         offYP = Math.floor(offYP)
         offYP -= 0;
         player_v_y *= 0.5;
@@ -224,12 +226,24 @@ function tick() {
         player_v_y += 0.1
     }
 
-    // Collision with walls
-    if(pA[player_index_y - 1][Math.ceil(x_coord / pixS)] == 1){
+    // Collision with walls (left detector)
+    if(pA[player_index_y - 1][Math.ceil(x_coord / pixS - player_w / 2 / pixS)] == 1){
         offXP = Math.floor(offXP);
+        player_v_x *= -0.5;
     }
-    if(pA[player_index_y - 1][Math.floor(x_coord / pixS)] == 1){
+    if(pA[player_index_y - 1][Math.floor(x_coord / pixS - player_w / 2 / pixS)] == 1){
         offXP = Math.ceil(offXP);
+        player_v_x *= -0.5;
+    }
+
+    // Collision with walls (right detector)
+    if(pA[player_index_y - 1][Math.ceil(x_coord / pixS + player_w / 2 / pixS)] == 1){
+        offXP = Math.floor(offXP);
+        player_v_x *= -0.5;
+    }
+    if(pA[player_index_y - 1][Math.floor(x_coord / pixS + player_w / 2 / pixS)] == 1){
+        offXP = Math.ceil(offXP);
+        player_v_x *= -0.5;
     }
 
 
@@ -258,10 +272,14 @@ function tick() {
 
     // Write troubleshooting info
     ctx.fillStyle = "#000000";
-    ctx.fillText("X-Value of Player: " + x_coord, 10, 10)
-    ctx.fillText("Y-Value of Player: " + y_coord, 10, 20)
-    ctx.fillText("X-index of Player: " + player_index_x, 10, 30)
-    ctx.fillText("Y-index of Player: " + player_index_y, 10, 40)
+    ctx.fillText("X-Value of Player: " + x_coord, 10, 10);
+    ctx.fillText("Y-Value of Player: " + y_coord, 10, 20);
+    ctx.fillText("X-index of Player: " + player_index_x, 10, 30);
+    ctx.fillText("Y-index of Player: " + player_index_y, 10, 40);
+    ctx.fillText("OffXP: " + offXP, 10, 50);
+    ctx.fillText("OffYP: " + offYP, 10, 60);
+    ctx.fillText("Player x-velocity: " + player_v_x, 10, 70);
+    ctx.fillText("Player y-velocity: " + player_v_y, 10, 80);
 
 
 }
