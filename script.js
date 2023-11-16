@@ -16,7 +16,7 @@ var pCX = Math.floor(maxW / pixS);  // count of pixels across the screen
 var pCY = Math.floor(maxH / pixS);  // count of pixels across the screen
 
 var pCXW = 1000;      // count of pixels across the world
-var pCYW = 700;       // count of pixels across the world
+var pCYW = 800;       // count of pixels across the world
 
 var itC = 0;        // Iteration Count
 
@@ -45,7 +45,7 @@ var cloneA = new Array(pCY);
 // Character
 
 var offXP = 0;  //offset of pixels
-var offYP = 90;  //offset of pixels
+var offYP = 190;  //offset of pixels
 
 var player_w = 30;
 var player_h = 50;
@@ -60,7 +60,7 @@ var player_acc_y = 1.5;
 
 // World generation parameters
 
-var min_cave_alt = 190;      // Minimum distance down for cave
+var min_cave_alt = 290;      // Minimum distance down for cave
 var cave_chance = 0.001;     // Chance of a cave seeding
 var cave_iterations = 40;    // Cave-forming iterations
 var cave_spread_chance = 0.05;   // Chance of a cave spreading to neighbors during iteration
@@ -80,16 +80,19 @@ document.getElementById("fullscreen").addEventListener("click", function() {
     }
 });
 
-// World elements 0 = air, 1 = mars soil
-elHues = ["#000000", "#770000", "#440000", "#007700"];
+// World elements 0 = air, 1 = mars soil, 2 = dark mars soil, 3 = plant, 4 = earth stone, 5 = water
+elHues = ["#000000", "#770000", "#440000", "#007700", "#333333", "#000077"];
 
 
 var tickS = 50;
 
 function genWorld() {
-    // Create surface layer
+    
+    
+    
+    // Create mars surface layer
     pAinv = new Array(pCXW)
-    var alt = 150
+    var alt = 250
     var altV = 0
     for (var x = 0; x < pCXW; x++){
         temp_y = new Array(pCYW);
@@ -189,6 +192,20 @@ function genWorld() {
                     pA[y][x] = 0;
                 }
             }
+        }
+    }
+
+    // Create Earth
+    for(var y = 0; y < 120; y++){
+        for(var x = 0; x < pCXW; x++){
+            r = Math.random()
+            if(r < 0.7){
+                pA[y][x] = 4
+            }
+            else{
+                pA[y][x] = 5
+            }
+            
         }
     }
 
