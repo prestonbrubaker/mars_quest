@@ -3,12 +3,21 @@ var ctx = c.getContext("2d");
 var spriteSheet = new Image();
 spriteSheet.src = 'testpoop.png'; // Replace with the path to your sprite sheet
 
+function resizeCanvas() {
+    var viewportWidth = window.innerWidth;
+    var viewportHeight = window.innerHeight;
+
+    c.width = viewportWidth * 0.8;
+    c.height = viewportHeight * 0.8;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
 
 // Display settings
 var minW = 0;
 var minH = 0;
-var maxW = canvas1.width;   //width is 800 pixels
-var maxH = canvas1.height;   //height is 800 pixels
+var maxW = c.width;   //width is 800 pixels
+var maxH = c.height;   //height is 800 pixels
 var bgHue = "#777777";
 
 var pixS = 10;
@@ -19,7 +28,6 @@ var pCXW = 1000;      // count of pixels across the world
 var pCYW = 800;       // count of pixels across the world
 
 var itC = 0;        // Iteration Count
-
 
 // Animations/Spritesheet
 var frameWidth = 40; // Width of each frame in your sprite sheet
