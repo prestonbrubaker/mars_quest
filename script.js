@@ -2,37 +2,69 @@ var c = document.getElementById("canvas1");
 var ctx = c.getContext("2d");
 var spriteSheet = new Image();
 spriteSheet.src = 'testpoop.png'; // Replace with the path to your sprite sheet
-
-function resizeCanvas() {
-    var viewportWidth = window.innerWidth;
-    var viewportHeight = window.innerHeight;
-
-    c.width = viewportWidth * 0.8;
-    c.height = viewportHeight * 0.8;
-}
-resizeCanvas();
-window.addEventListener('resize', resizeCanvas);
-
-// Display settings
-var minW = 0;
-var minH = 0;
-var maxW = c.width;   //width is 800 pixels
-var maxH = c.height;   //height is 800 pixels
-var bgHue = "#777777";
-
-var pixS = 10;
-var pCX = Math.floor(maxW / pixS);  // count of pixels across the screen
-var pCY = Math.floor(maxH / pixS);  // count of pixels across the screen
+var isFullscreen = false;
 
 var pCXW = 1000;      // count of pixels across the world
 var pCYW = 800;       // count of pixels across the world
+var itC = 0;
+const tickS = 50;
+const pixS = 10;
+const minW = 0;
+const minH = 0;
+var maxW = c.width;   
+var maxH = c.height;   
+const bgHue = "#777777";
+var pCX = Math.floor(maxW / pixS);  // count of pixels across the screen
+var pCY = Math.floor(maxH / pixS);  // count of pixels across the screen
 
-var itC = 0;        // Iteration Count
+function resizeCanvas() {
+    if (isFullscreen) {
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+    } else {
+        c.width = window.innerWidth * 0.8;
+        c.height = window.innerHeight * 0.8;
+    }
+    updateWorld();
+}
+
+function updateWorld() {
+    maxW = c.width;
+    maxH = c.height;
+    pCX = Math.floor(maxW / pixS);
+    pCY = Math.floor(maxH / pixS);
+}
+
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+document.addEventListener('fullscreenchange', function() {
+    isFullscreen = !!document.fullscreenElement;
+    resizeCanvas();
+});
+
+// Fullscreen Button Action
+document.getElementById("fullscreen").addEventListener("click", function() {
+    var fullscreenButton = document.getElementById("fullscreen");
+    if (fullscreenButton) {
+        fullscreenButton.addEventListener("click", function() {
+        var canvas = document.getElementById("canvas1");
+        if (canvas.requestFullscreen) {
+            canvas.requestFullscreen();
+        } else if (canvas.mozRequestFullScreen) { /* Firefox */
+            canvas.mozRequestFullScreen();
+        } else if (canvas.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+            canvas.webkitRequestFullscreen();
+        } else if (canvas.msRequestFullscreen) { /* IE/Edge */
+            canvas.msRequestFullscreen();
+        }
+        });
+    };
+});
 
 // Animations/Spritesheet
-var frameWidth = 40; // Width of each frame in your sprite sheet
-var frameHeight = 52; // Height of each frame in your sprite sheet
-var totalFrames = 5; // Total number of frames in the sprite sheet
+const frameWidth = 40; // Width of each frame in your sprite sheet
+const frameHeight = 52; // Height of each frame in your sprite sheet
+const totalFrames = 5; // Total number of frames in the sprite sheet
 var currentFrame = 2; // Current frame to display
 
 var isMovingRight = false;
@@ -76,26 +108,9 @@ var cave_chance = 0.001;     // Chance of a cave seeding
 var cave_iterations = 40;    // Cave-forming iterations
 var cave_spread_chance = 0.05;   // Chance of a cave spreading to neighbors during iteration
 
-// Fullscreen Button Action
-document.getElementById("fullscreen").addEventListener("click", function() {
-    var canvas = document.getElementById("canvas1");
-
-    if (canvas.requestFullscreen) {
-        canvas.requestFullscreen();
-    } else if (canvas.mozRequestFullScreen) { /* Firefox */
-        canvas.mozRequestFullScreen();
-    } else if (canvas.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
-        canvas.webkitRequestFullscreen();
-    } else if (canvas.msRequestFullscreen) { /* IE/Edge */
-        canvas.msRequestFullscreen();
-    }
-});
-
 // World elements 0 = air, 1 = mars soil, 2 = dark mars soil, 3 = plant, 4 = earth stone, 5 = water
 elHues = ["#000000", "#770000", "#440000", "#007700", "#333333", "#000077"];
 
-
-var tickS = 50;
 
 function genWorld() {
     
