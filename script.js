@@ -67,6 +67,7 @@ var player_acc_x = .7; // Amount of acceleration for each key press
 var player_acc_y = 1.5;
 
 var on_ground = 0;
+var in_wall = 0;
 
 // World generation parameters
 
@@ -307,24 +308,23 @@ function tick() {
 
 
     // Collision with ground and gravity (left detector and right detector)
-    if(pA[Math.floor(player_index_y + 0.1)][Math.floor(x_coord / pixS - player_w / 2 / pixS)] > 0 || pA[Math.floor(player_index_y + 0.1)][Math.floor(x_coord / pixS + player_w / 2 / pixS)] > 0){
-        if(offYP % 1 > 0.5){
-            offYP -= 0;
-        }
-        offYP = Math.floor(offYP + 0.5)
-        offYP -= 0;
+    if(pA[Math.floor(y_coord / pixS + 0.1)][Math.floor(x_coord / pixS - player_w / 2 / pixS)] > 0 || pA[Math.floor(y_coord / pixS + 0.1)][Math.floor(x_coord / pixS + player_w / 2 / pixS)] > 0){
+        offYP -= .2 *  ((offYP - .5) % 1 );
         if(on_ground == 0){
             player_v_y *= 0;
         }
+        else{
+   
+        }
         on_ground = 1;
     }
-    else{
+    else if (pA[Math.floor(y_coord / pixS + 0.3)][Math.floor(x_coord / pixS - player_w / 2 / pixS)] == 0 && pA[Math.floor(y_coord / pixS + 0.3)][Math.floor(x_coord / pixS + player_w / 2 / pixS)] == 0){
         player_v_y += 0.1
         on_ground = 0;
     }
 
     // Collision with ceiling (upper-left detector and right detector)
-    if(pA[Math.floor(player_index_y - player_h / pixS - 0.1)][Math.floor(x_coord / pixS - player_w / 2 / pixS)] > 0 || pA[Math.floor(player_index_y - player_h / pixS - 0.1)][Math.floor(x_coord / pixS + player_w / 2 / pixS)] > 0){
+    if(pA[Math.floor(y_coord / pixS - player_h / pixS - 0.1)][Math.floor(x_coord / pixS - player_w / 2 / pixS)] > 0 || pA[Math.floor(y_coord / pixS - player_h / pixS - 0.1)][Math.floor(x_coord / pixS + player_w / 2 / pixS)] > 0){
         if(offYP % 1 < 0.5){
             offYP += .1;
         }
@@ -334,31 +334,38 @@ function tick() {
     }
 
     // Collision with walls (left detector)
-    if(pA[player_index_y - 1][Math.floor(x_coord / pixS - player_w / 2 / pixS - .2)] > 0){
-        offXP = Math.ceil(offXP);
-        offXP += .01;
-        player_v_x += 0.05;
+    if(pA[Math.floor(y_coord / pixS)][Math.floor(x_coord / pixS - player_w / 2 / pixS - .2)] > 0){
+        //offXP = Math.ceil(offXP);
+        offXP += .2 *  ((offXP - .5) % 1 ) + 0.001;
+        player_v_x *= .01;
+        in_wall = 1;
     }
 
     // Collision with walls (right detector)
-    if(pA[player_index_y - 1][Math.floor(x_coord / pixS + player_w / 2 / pixS + .2)] > 0){
-        offXP = Math.floor(offXP);
-        //offXP -= .1;
-        player_v_x *= -0.1;
+    else if(pA[Math.floor(y_coord / pixS)][Math.floor(x_coord / pixS + player_w / 2 / pixS + .2)] > 0){
+        //offXP = Math.floor(offXP);
+        offXP -= .2 *  ((offXP - .5) % 1 ) + 0.001;
+        player_v_x *= 0.1;
+        in_wall = 1;
     }
 
     // Collision with walls (upper-left detector)
-    if(pA[Math.floor(player_index_y - 1 - player_h / pixS)][Math.floor(x_coord / pixS - player_w / 2 / pixS - .2)] > 0){
-        offXP = Math.ceil(offXP);
-        player_v_x *= -0.1;
-        //offXP += .1;
+    else if(pA[Math.floor(y_coord / pixS - 1 - player_h / pixS)][Math.floor(x_coord / pixS - player_w / 2 / pixS - .2)] > 0){
+        //offXP = Math.ceil(offXP);
+        player_v_x *= 0.1;
+        offXP += .2 *  ((offXP - .5) % 1 ) + 0.001;
+        in_wall = 1;
     }
 
     // Collision with walls (upper-right detector)
-    if(pA[Math.floor(player_index_y - 1 - player_h / pixS)][Math.floor(x_coord / pixS + player_w / 2 / pixS + .2)] > 0){
-        offXP = Math.floor(offXP);
-        //offXP -= .1;
-        player_v_x *= -0.1;
+    else if(pA[Math.floor(y_coord / pixS - 1 - player_h / pixS)][Math.floor(x_coord / pixS + player_w / 2 / pixS + .2)] > 0){
+        //offXP = Math.floor(offXP);
+        offXP -= .2 *  ((offXP - .5) % 1 ) + 0.001;
+        player_v_x *= 0.1;
+        in_wall = 1;
+    }
+    else{
+        in_wall = 0;
     }
 
 
@@ -437,7 +444,8 @@ function tick() {
     ctx.fillText("Player x-velocity: " + player_v_x, 10, 70);
     ctx.fillText("Player y-velocity: " + player_v_y, 10, 80);
     ctx.fillText("Player on Ground?: " + on_ground, 10, 90);
-    ctx.fillText("Iteration Count: " + itC, 10, 100);
+    ctx.fillText("Player in Wall?: " + in_wall, 10, 100);
+    ctx.fillText("Iteration Count: " + itC, 10, 110);
 
     itC++;
 }
@@ -480,7 +488,7 @@ document.addEventListener('keydown', function(event) {
             break;
         case 's': // down
             isStill = true;
-            if(offYP < pCYW - pCY) player_v_y = 1 * player_acc_x;
+            if(offYP < pCYW - pCY && on_ground != 1) player_v_y = 1 * player_acc_x;
             else player_v_y = 0;
             break;
         case 'a': // left
