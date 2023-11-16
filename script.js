@@ -55,8 +55,8 @@ var player_off_y = maxH / 2;
 var player_v_x = 0;  // Player velocity
 var player_v_y = 0;
 
-var player_acc_x = 0.5; // Amount of acceleration for each key press
-var player_acc_y = 1.5;
+var player_acc_x = .7; // Amount of acceleration for each key press
+var player_acc_y = 2.5;
 
 var on_ground = 0;
 
@@ -389,12 +389,12 @@ function tick() {
         offYP = pCYW - pCY - 1;
     }
 
-    player_v_x *= 0.9;
-    player_v_y *= 0.9;
+    player_v_x *= 0.99;
+    player_v_y *= 0.99;
 
     // Iterate to spread grass
     
-    for( i = 0; i < 10000; i++){
+    for( i = 0; i < 1000; i++){
         x_check = Math.floor(Math.random() * pCXW);
         y_check = Math.floor(Math.random() * (pCYW - 1));
         if(pA[y_check][x_check] == 3){
