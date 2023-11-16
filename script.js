@@ -18,6 +18,8 @@ var pCY = Math.floor(maxH / pixS);  // count of pixels across the screen
 var pCXW = 1000;      // count of pixels across the world
 var pCYW = 700;       // count of pixels across the world
 
+var itC = 0;        // Iteration Count
+
 
 // Animations/Spritesheet
 var frameWidth = 40; // Width of each frame in your sprite sheet
@@ -43,7 +45,7 @@ var cloneA = new Array(pCY);
 // Character
 
 var offXP = 0;  //offset of pixels
-var offYP = 70;  //offset of pixels
+var offYP = 90;  //offset of pixels
 
 var player_w = 30;
 var player_h = 50;
@@ -369,7 +371,25 @@ function tick() {
     player_v_x *= 0.9;
     player_v_y *= 0.9;
 
-
+    // Iterate to spread grass
+    
+    for( i = 0; i < 1000; i++){
+        x_check = Math.floor(Math.random() * pCXW);
+        y_check = Math.floor(Math.random() * (pCYW - 1));
+        if(pA[y_check][x_check] == 3){
+            for(var y_it = -2; y_it <= 2; y_it++){
+                for(var x_it = -2; x_it <= 2; x_it++){
+                    if(y_check + y_it > pCYW - 1 || y_check + y_it < 0 || x_check + x_it > pCXW - 1 || x_check + x_it < 0){
+                        continue;
+                    }
+                    if(Math.random() < 1 && (pA[y_check + 1 + y_it][x_check + x_it] == 2 || pA[y_check + 1 + y_it][x_check + x_it] == 3) && pA[y_check + y_it][x_check + x_it] == 0){
+                        pA[y_check + y_it][x_check + x_it] = 3;
+                    }
+                }
+            }
+        }
+    }
+    
 
 
     // Write troubleshooting info
@@ -382,8 +402,9 @@ function tick() {
     ctx.fillText("OffYP: " + offYP, 10, 60);
     ctx.fillText("Player x-velocity: " + player_v_x, 10, 70);
     ctx.fillText("Player y-velocity: " + player_v_y, 10, 80);
+    ctx.fillText("Iteration Count: " + itC, 10, 90);
 
-
+    itC++;
 }
 
 
@@ -398,7 +419,7 @@ c.addEventListener('click', function(event) {
 
     for(var y_it = -2; y_it <= 2; y_it++){
         for(var x_it = -2; x_it <= 2; x_it++){
-            if(y_index + y_it > pCYW || y_index + y_it < 0 || x_index + x_it > pCXW || x_index + x_it < 0){
+            if(y_index + y_it > pCYW - 1 || y_index + y_it < 0 || x_index + x_it > pCXW - 1 || x_index + x_it < 0){
                 continue;
             }
             if(x_it ** 2 + y_it ** 2 > 5){
