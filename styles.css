@@ -5,12 +5,16 @@
 }
 
 #fullscreen {
-    border-radius: 0.2rem;
-    background-color: #770000;
-    color: yellow;
+    background-color: #770000; 
+    color: white; 
+    border: none; 
+    padding: 15px 32px; 
+    text-align: center;
+    text-decoration: none;
     display: inline-block;
     margin: 4px 2px; 
     cursor: pointer; 
+    border-radius: 4px; 
 }
 
 #fullscreen:fullscreen {
