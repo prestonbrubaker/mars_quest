@@ -56,7 +56,7 @@ var player_v_x = 0;  // Player velocity
 var player_v_y = 0;
 
 var player_acc_x = .7; // Amount of acceleration for each key press
-var player_acc_y = 2.5;
+var player_acc_y = 1.5;
 
 var on_ground = 0;
 
@@ -305,7 +305,9 @@ function tick() {
         }
         offYP = Math.floor(offYP)
         offYP -= 0;
-        player_v_y *= 0.5;
+        if(on_ground == 0){
+            player_v_y *= 0;
+        }
         on_ground = 1;
     }
     else{
@@ -320,42 +322,42 @@ function tick() {
         }
         offYP = Math.ceil(offYP)
         offYP += 0;
-        player_v_y *= 0.5;
+        player_v_y *= -0.5;
     }
 
     // Collision with walls (left detector)
     if(pA[player_index_y - 1][Math.floor(x_coord / pixS - player_w / 2 / pixS + .2)] > 0){
         offXP = Math.floor(offXP);
         //offXP -= .1;
-        player_v_x *= -0.2;
+        player_v_x *= -0.1;
     }
     if(pA[player_index_y - 1][Math.floor(x_coord / pixS - player_w / 2 / pixS - .2)] > 0){
         offXP = Math.ceil(offXP);
         //offXP += .1;
-        player_v_x *= -0.2;
+        player_v_x *= -0.1;
     }
 
     // Collision with walls (right detector)
     if(pA[player_index_y - 1][Math.floor(x_coord / pixS + player_w / 2 / pixS + .2)] > 0){
         offXP = Math.floor(offXP);
         //offXP -= .1;
-        player_v_x *= -0.2;
+        player_v_x *= -0.1;
     }
     if(pA[player_index_y - 1][Math.floor(x_coord / pixS + player_w / 2 / pixS - .2)] > 0){
         offXP = Math.ceil(offXP);
-        //player_v_x *= -0.2;
-        offXP += .1;
+        player_v_x *= -0.1;
+        //offXP += .1;
     }
 
     // Collision with walls (upper-left detector)
     if(pA[Math.floor(player_index_y - 1 - player_h / pixS)][Math.floor(x_coord / pixS - player_w / 2 / pixS + .2)] > 0){
         offXP = Math.floor(offXP);
         //offXP -= .1;
-        player_v_x *= -0.2;
+        player_v_x *= -0.1;
     }
     if(pA[Math.floor(player_index_y - 1 - player_h / pixS)][Math.floor(x_coord / pixS - player_w / 2 / pixS - .2)] > 0){
         offXP = Math.ceil(offXP);
-        player_v_x *= -0.2;
+        player_v_x *= -0.1;
         //offXP += .1;
     }
 
@@ -363,11 +365,11 @@ function tick() {
     if(pA[Math.floor(player_index_y - 1 - player_h / pixS)][Math.floor(x_coord / pixS + player_w / 2 / pixS + .2)] > 0){
         offXP = Math.floor(offXP);
         //offXP -= .1;
-        player_v_x *= -0.2;
+        player_v_x *= -0.1;
     }
     if(pA[Math.floor(player_index_y - 1 - player_h / pixS)][Math.floor(x_coord / pixS + player_w / 2 / pixS - .2)] > 0){
         offXP = Math.ceil(offXP);
-        player_v_x *= -0.2;
+        player_v_x *= -0.1;
         //offXP += .1;
     }
 
@@ -389,8 +391,8 @@ function tick() {
         offYP = pCYW - pCY - 1;
     }
 
-    player_v_x *= 0.99;
-    player_v_y *= 0.99;
+    player_v_x *= 0.95;
+    player_v_y *= 0.95;
 
     // Iterate to spread grass
     
