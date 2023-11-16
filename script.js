@@ -309,7 +309,7 @@ function tick() {
     // Collision with ground and gravity (left detector and right detector)
     if(pA[Math.floor(player_index_y + 0.1)][Math.floor(x_coord / pixS - player_w / 2 / pixS)] > 0 || pA[Math.floor(player_index_y + 0.1)][Math.floor(x_coord / pixS + player_w / 2 / pixS)] > 0){
         if(offYP % 1 > 0.5){
-            //offYP -= 1;
+            offYP -= .01;
         }
         offYP = Math.floor(offYP)
         offYP -= 0;
@@ -334,56 +334,52 @@ function tick() {
     }
 
     // Collision with walls (left detector)
-    if(pA[player_index_y - 1][Math.floor(x_coord / pixS - player_w / 2 / pixS + .2)] > 0){
-        offXP = Math.floor(offXP);
-        //offXP -= .1;
-        player_v_x *= -0.1;
-    }
-    if(pA[player_index_y - 1][Math.floor(x_coord / pixS - player_w / 2 / pixS - .2)] > 0){
+    if(pA[player_index_y - 1][Math.floor(x_coord / pixS - player_w / 2 / pixS - .4)] > 0){
         offXP = Math.ceil(offXP);
-        //offXP += .1;
-        player_v_x *= -0.1;
+        offXP += .01;
+        player_v_x += 0.05;
     }
 
     // Collision with walls (right detector)
-    if(pA[player_index_y - 1][Math.floor(x_coord / pixS + player_w / 2 / pixS + .2)] > 0){
+    if(pA[player_index_y - 1][Math.floor(x_coord / pixS + player_w / 2 / pixS + .4)] > 0){
         offXP = Math.floor(offXP);
         //offXP -= .1;
         player_v_x *= -0.1;
-    }
-    if(pA[player_index_y - 1][Math.floor(x_coord / pixS + player_w / 2 / pixS - .2)] > 0){
-        offXP = Math.ceil(offXP);
-        player_v_x *= -0.1;
-        //offXP += .1;
     }
 
     // Collision with walls (upper-left detector)
-    if(pA[Math.floor(player_index_y - 1 - player_h / pixS)][Math.floor(x_coord / pixS - player_w / 2 / pixS + .2)] > 0){
-        offXP = Math.floor(offXP);
-        //offXP -= .1;
-        player_v_x *= -0.1;
-    }
-    if(pA[Math.floor(player_index_y - 1 - player_h / pixS)][Math.floor(x_coord / pixS - player_w / 2 / pixS - .2)] > 0){
+    if(pA[Math.floor(player_index_y - 1 - player_h / pixS)][Math.floor(x_coord / pixS - player_w / 2 / pixS - .4)] > 0){
         offXP = Math.ceil(offXP);
         player_v_x *= -0.1;
         //offXP += .1;
     }
 
     // Collision with walls (upper-right detector)
-    if(pA[Math.floor(player_index_y - 1 - player_h / pixS)][Math.floor(x_coord / pixS + player_w / 2 / pixS + .2)] > 0){
+    if(pA[Math.floor(player_index_y - 1 - player_h / pixS)][Math.floor(x_coord / pixS + player_w / 2 / pixS + .4)] > 0){
         offXP = Math.floor(offXP);
         //offXP -= .1;
         player_v_x *= -0.1;
-    }
-    if(pA[Math.floor(player_index_y - 1 - player_h / pixS)][Math.floor(x_coord / pixS + player_w / 2 / pixS - .2)] > 0){
-        offXP = Math.ceil(offXP);
-        player_v_x *= -0.1;
-        //offXP += .1;
     }
 
 
     offXP += player_v_x;
     offYP += player_v_y;
+
+    if(player_v_x > 0.05){
+        isMovingRight = true;
+        isMovingLeft = false;
+        isStill = false;
+    }
+    else if(player_v_x < -0.05){
+        isMovingLeft = true;
+        isMovingRight = false;
+        isStill = false;
+    }
+    else{
+        isMovingLeft = false;
+        isMovingRight = false;
+        isStill = true;
+    }
 
     // Keep player in bounds
     if(offXP < 0){
@@ -399,8 +395,15 @@ function tick() {
         offYP = pCYW - pCY - 1;
     }
 
-    player_v_x *= 0.95;
-    player_v_y *= 0.95;
+    if(on_ground == 0){
+        player_v_x *= 0.95;
+        player_v_y *= 0.95;
+    }
+    else{
+        player_v_x *= 0.70;
+        player_v_y *= 0.70;
+    }
+    
 
     // Iterate to spread grass
     
