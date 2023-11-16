@@ -403,8 +403,8 @@ function tick() {
     }
 
     if(on_ground == 0){
-        player_v_x *= 0.95;
-        player_v_y *= 0.95;
+        player_v_x *= 0.90;
+        player_v_y *= 0.90;
     }
     else{
         player_v_x *= 0.70;
@@ -493,12 +493,12 @@ document.addEventListener('keydown', function(event) {
             break;
         case 'a': // left
             isMovingLeft = true;
-            if(offXP > 0) player_v_x = -1 * player_acc_x;
+            if(offXP > 0 && in_wall == 0) player_v_x = -1 * player_acc_x;
             else player_v_x = 0;
             break;
         case 'd': // right
             isMovingRight = true;
-            if(offXP < pCXW - pCX) player_v_x = player_acc_x;
+            if(offXP < pCXW - pCX && in_wall == 0) player_v_x = player_acc_x;
             else player_v_x = 0;
             break;
         //case 'space': // spacebar 
