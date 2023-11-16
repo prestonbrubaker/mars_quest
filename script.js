@@ -79,7 +79,7 @@ document.getElementById("fullscreen").addEventListener("click", function() {
 });
 
 // World elements 0 = air, 1 = mars soil
-elHues = ["#000000", "#770000", "#440000"];
+elHues = ["#000000", "#770000", "#440000", "#007700"];
 
 
 var tickS = 50;
@@ -186,6 +186,15 @@ function genWorld() {
                 if(neighborC > 7){
                     pA[y][x] = 0;
                 }
+            }
+        }
+    }
+
+    //Seed some grass
+    for (var y = 0; y < pCYW - 1; y++){
+        for (var x = 0; x < pCXW; x++){
+            if(pA[y][x] == 0 && pA[y + 1][x] == 2 && Math.random() < 0.1){
+                pA[y][x] = 3
             }
         }
     }
