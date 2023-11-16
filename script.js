@@ -58,6 +58,8 @@ var player_v_y = 0;
 var player_acc_x = 0.5; // Amount of acceleration for each key press
 var player_acc_y = 1.5;
 
+var on_ground = 0;
+
 // World generation parameters
 
 var min_cave_alt = 290;      // Minimum distance down for cave
@@ -304,9 +306,11 @@ function tick() {
         offYP = Math.floor(offYP)
         offYP -= 0;
         player_v_y *= 0.5;
+        on_ground = 1;
     }
     else{
         player_v_y += 0.1
+        on_ground = 0;
     }
 
     // Collision with ceiling (upper-left detector and right detector)
@@ -419,7 +423,8 @@ function tick() {
     ctx.fillText("OffYP: " + offYP, 10, 60);
     ctx.fillText("Player x-velocity: " + player_v_x, 10, 70);
     ctx.fillText("Player y-velocity: " + player_v_y, 10, 80);
-    ctx.fillText("Iteration Count: " + itC, 10, 90);
+    ctx.fillText("Player on Ground?: " + on_ground, 10, 90);
+    ctx.fillText("Iteration Count: " + itC, 10, 100);
 
     itC++;
 }
@@ -457,22 +462,22 @@ document.addEventListener('keydown', function(event) {
     switch(event.key.toLowerCase()) {
         case 'w': // up
             isStill = true;
-            if(offYP > 0) player_v_y -= player_acc_y;
+            if(offYP > 0 && on_ground == 1) player_v_y = -1 * player_acc_y;
             else player_v_y = 0;
             break;
         case 's': // down
             isStill = true;
-            if(offYP < pCYW - pCY) player_v_y += player_acc_x;
+            if(offYP < pCYW - pCY) player_v_y = 1 * player_acc_x;
             else player_v_y = 0;
             break;
         case 'a': // left
             isMovingLeft = true;
-            if(offXP > 0) player_v_x -= player_acc_x;
+            if(offXP > 0) player_v_x = -1 * player_acc_x;
             else player_v_x = 0;
             break;
         case 'd': // right
             isMovingRight = true;
-            if(offXP < pCXW - pCX) player_v_x += player_acc_x;
+            if(offXP < pCXW - pCX) player_v_x = player_acc_x;
             else player_v_x = 0;
             break;
         //case 'space': // spacebar 
