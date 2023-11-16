@@ -309,12 +309,12 @@ function tick() {
     // Collision with ground and gravity (left detector and right detector)
     if(pA[Math.floor(player_index_y + 0.1)][Math.floor(x_coord / pixS - player_w / 2 / pixS)] > 0 || pA[Math.floor(player_index_y + 0.1)][Math.floor(x_coord / pixS + player_w / 2 / pixS)] > 0){
         if(offYP % 1 > 0.5){
-            offYP -= .6;
+            offYP -= 0;
         }
-        offYP = Math.floor(offYP)
+        offYP = Math.floor(offYP + 0.5)
         offYP -= 0;
         if(on_ground == 0){
-            player_v_y *= .1;
+            player_v_y *= 0;
         }
         on_ground = 1;
     }
