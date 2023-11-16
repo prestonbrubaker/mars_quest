@@ -43,7 +43,7 @@ var cloneA = new Array(pCY);
 // Character
 
 var offXP = 0;  //offset of pixels
-var offYP = 20;  //offset of pixels
+var offYP = 70;  //offset of pixels
 
 var player_w = 30;
 var player_h = 50;
