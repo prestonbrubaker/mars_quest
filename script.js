@@ -16,7 +16,9 @@ var pCX = Math.floor(maxW / pixS);  // count of pixels across the screen
 var pCY = Math.floor(maxH / pixS);  // count of pixels across the screen
 
 var pCXW = 1000;      // count of pixels across the world
-var pCYW = 700;       // count of pixels across the world
+var pCYW = 800;       // count of pixels across the world
+
+var itC = 0;        // Iteration Count
 
 
 // Animations/Spritesheet
@@ -43,7 +45,7 @@ var cloneA = new Array(pCY);
 // Character
 
 var offXP = 0;  //offset of pixels
-var offYP = 70;  //offset of pixels
+var offYP = 190;  //offset of pixels
 
 var player_w = 30;
 var player_h = 50;
@@ -53,12 +55,14 @@ var player_off_y = maxH / 2;
 var player_v_x = 0;  // Player velocity
 var player_v_y = 0;
 
-var player_acc_x = 0.5; // Amount of acceleration for each key press
-var player_acc_y = 1.5;
+var player_acc_x = .7; // Amount of acceleration for each key press
+var player_acc_y = 2.5;
+
+var on_ground = 0;
 
 // World generation parameters
 
-var min_cave_alt = 190;      // Minimum distance down for cave
+var min_cave_alt = 290;      // Minimum distance down for cave
 var cave_chance = 0.001;     // Chance of a cave seeding
 var cave_iterations = 40;    // Cave-forming iterations
 var cave_spread_chance = 0.05;   // Chance of a cave spreading to neighbors during iteration
@@ -78,16 +82,19 @@ document.getElementById("fullscreen").addEventListener("click", function() {
     }
 });
 
-// World elements 0 = air, 1 = mars soil
-elHues = ["#000000", "#770000", "#440000", "#007700"];
+// World elements 0 = air, 1 = mars soil, 2 = dark mars soil, 3 = plant, 4 = earth stone, 5 = water
+elHues = ["#000000", "#770000", "#440000", "#007700", "#333333", "#000077"];
 
 
 var tickS = 50;
 
 function genWorld() {
-    // Create surface layer
+    
+    
+    
+    // Create mars surface layer
     pAinv = new Array(pCXW)
-    var alt = 150
+    var alt = 250
     var altV = 0
     for (var x = 0; x < pCXW; x++){
         temp_y = new Array(pCYW);
@@ -190,6 +197,20 @@ function genWorld() {
         }
     }
 
+    // Create Earth
+    for(var y = 0; y < 120; y++){
+        for(var x = 0; x < pCXW; x++){
+            r = Math.random()
+            if(r < 0.7){
+                pA[y][x] = 4
+            }
+            else{
+                pA[y][x] = 5
+            }
+            
+        }
+    }
+
     //Seed some grass
     for (var y = 0; y < pCYW - 1; y++){
         for (var x = 0; x < pCXW; x++){
@@ -285,9 +306,11 @@ function tick() {
         offYP = Math.floor(offYP)
         offYP -= 0;
         player_v_y *= 0.5;
+        on_ground = 1;
     }
     else{
         player_v_y += 0.1
+        on_ground = 0;
     }
 
     // Collision with ceiling (upper-left detector and right detector)
@@ -366,10 +389,28 @@ function tick() {
         offYP = pCYW - pCY - 1;
     }
 
-    player_v_x *= 0.9;
-    player_v_y *= 0.9;
+    player_v_x *= 0.99;
+    player_v_y *= 0.99;
 
-
+    // Iterate to spread grass
+    
+    for( i = 0; i < 1000; i++){
+        x_check = Math.floor(Math.random() * pCXW);
+        y_check = Math.floor(Math.random() * (pCYW - 1));
+        if(pA[y_check][x_check] == 3){
+            for(var y_it = -2; y_it <= 2; y_it++){
+                for(var x_it = -2; x_it <= 2; x_it++){
+                    if(y_check + y_it > pCYW - 1 || y_check + y_it < 0 || x_check + x_it > pCXW - 1 || x_check + x_it < 0){
+                        continue;
+                    }
+                    if(Math.random() < 1 && (pA[y_check + 1 + y_it][x_check + x_it] == 2 || pA[y_check + 1 + y_it][x_check + x_it] == 3) && pA[y_check + y_it][x_check + x_it] == 0){
+                        pA[y_check + y_it][x_check + x_it] = 3;
+                    }
+                }
+            }
+        }
+    }
+    
 
 
     // Write troubleshooting info
@@ -382,8 +423,10 @@ function tick() {
     ctx.fillText("OffYP: " + offYP, 10, 60);
     ctx.fillText("Player x-velocity: " + player_v_x, 10, 70);
     ctx.fillText("Player y-velocity: " + player_v_y, 10, 80);
+    ctx.fillText("Player on Ground?: " + on_ground, 10, 90);
+    ctx.fillText("Iteration Count: " + itC, 10, 100);
 
-
+    itC++;
 }
 
 
@@ -398,7 +441,7 @@ c.addEventListener('click', function(event) {
 
     for(var y_it = -2; y_it <= 2; y_it++){
         for(var x_it = -2; x_it <= 2; x_it++){
-            if(y_index + y_it > pCYW || y_index + y_it < 0 || x_index + x_it > pCXW || x_index + x_it < 0){
+            if(y_index + y_it > pCYW - 1 || y_index + y_it < 0 || x_index + x_it > pCXW - 1 || x_index + x_it < 0){
                 continue;
             }
             if(x_it ** 2 + y_it ** 2 > 5){
@@ -419,22 +462,22 @@ document.addEventListener('keydown', function(event) {
     switch(event.key.toLowerCase()) {
         case 'w': // up
             isStill = true;
-            if(offYP > 0) player_v_y -= player_acc_y;
+            if(offYP > 0 && on_ground == 1) player_v_y = -1 * player_acc_y;
             else player_v_y = 0;
             break;
         case 's': // down
             isStill = true;
-            if(offYP < pCYW - pCY) player_v_y += player_acc_x;
+            if(offYP < pCYW - pCY) player_v_y = 1 * player_acc_x;
             else player_v_y = 0;
             break;
         case 'a': // left
             isMovingLeft = true;
-            if(offXP > 0) player_v_x -= player_acc_x;
+            if(offXP > 0) player_v_x = -1 * player_acc_x;
             else player_v_x = 0;
             break;
         case 'd': // right
             isMovingRight = true;
-            if(offXP < pCXW - pCX) player_v_x += player_acc_x;
+            if(offXP < pCXW - pCX) player_v_x = player_acc_x;
             else player_v_x = 0;
             break;
         //case 'space': // spacebar 
