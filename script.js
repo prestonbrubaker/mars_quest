@@ -46,7 +46,7 @@ var offXP = 0;  //offset of pixels
 var offYP = 20;  //offset of pixels
 
 var player_w = 30;
-var player_h = 70;
+var player_h = 50;
 var player_off_x = maxW / 2;
 var player_off_y = maxH / 2;
 
