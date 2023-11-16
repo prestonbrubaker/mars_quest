@@ -334,28 +334,28 @@ function tick() {
     }
 
     // Collision with walls (left detector)
-    if(pA[player_index_y - 1][Math.floor(x_coord / pixS - player_w / 2 / pixS - .4)] > 0){
+    if(pA[player_index_y - 1][Math.floor(x_coord / pixS - player_w / 2 / pixS - .2)] > 0){
         offXP = Math.ceil(offXP);
         offXP += .01;
         player_v_x += 0.05;
     }
 
     // Collision with walls (right detector)
-    if(pA[player_index_y - 1][Math.floor(x_coord / pixS + player_w / 2 / pixS + .4)] > 0){
+    if(pA[player_index_y - 1][Math.floor(x_coord / pixS + player_w / 2 / pixS + .2)] > 0){
         offXP = Math.floor(offXP);
         //offXP -= .1;
         player_v_x *= -0.1;
     }
 
     // Collision with walls (upper-left detector)
-    if(pA[Math.floor(player_index_y - 1 - player_h / pixS)][Math.floor(x_coord / pixS - player_w / 2 / pixS - .4)] > 0){
+    if(pA[Math.floor(player_index_y - 1 - player_h / pixS)][Math.floor(x_coord / pixS - player_w / 2 / pixS - .2)] > 0){
         offXP = Math.ceil(offXP);
         player_v_x *= -0.1;
         //offXP += .1;
     }
 
     // Collision with walls (upper-right detector)
-    if(pA[Math.floor(player_index_y - 1 - player_h / pixS)][Math.floor(x_coord / pixS + player_w / 2 / pixS + .4)] > 0){
+    if(pA[Math.floor(player_index_y - 1 - player_h / pixS)][Math.floor(x_coord / pixS + player_w / 2 / pixS + .2)] > 0){
         offXP = Math.floor(offXP);
         //offXP -= .1;
         player_v_x *= -0.1;
