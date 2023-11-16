@@ -394,7 +394,7 @@ function tick() {
 
     // Iterate to spread grass
     
-    for( i = 0; i < 1000; i++){
+    for( i = 0; i < 10000; i++){
         x_check = Math.floor(Math.random() * pCXW);
         y_check = Math.floor(Math.random() * (pCYW - 1));
         if(pA[y_check][x_check] == 3){
