@@ -1,7 +1,7 @@
 var c = document.getElementById("canvas1");
 var ctx = c.getContext("2d");
 var spriteSheet = new Image();
-spriteSheet.src = 'poopright.png'; // Replace with the path to your sprite sheet
+spriteSheet.src = 'testpoop.png'; // Replace with the path to your sprite sheet
 
 
 // Display settings
@@ -18,13 +18,22 @@ var pCY = Math.floor(maxH / pixS);  // count of pixels across the screen
 var pCXW = 1000;      // count of pixels across the world
 var pCYW = 700;       // count of pixels across the world
 
-var frameWidth = 52; // Width of each frame in your sprite sheet
-var frameHeight = 70; // Height of each frame in your sprite sheet
-var totalFrames = 2; // Total number of frames in the sprite sheet
-var currentFrame = 0; // Current frame to display
-var frameCounter = 0;
-var frameSpeed = 5; // Number of ticks between frame changes
 
+// Animations/Spritesheet
+var frameWidth = 40; // Width of each frame in your sprite sheet
+var frameHeight = 52; // Height of each frame in your sprite sheet
+var totalFrames = 5; // Total number of frames in the sprite sheet
+var currentFrame = 2; // Current frame to display
+
+var isMovingRight = false;
+var isMovingLeft = false;
+var isStill = false;
+
+var rightToggleCounter = 0;
+var leftToggleCounter = 0;
+
+var rightToggleRate = 2; // Frame toggle rate
+var leftToggleRate = 2; 
 
 var pA = new Array(pCY);
 
@@ -34,7 +43,7 @@ var cloneA = new Array(pCY);
 // Character
 
 var offXP = 0;  //offset of pixels
-var offYP = 100;  //offset of pixels
+var offYP = 20;  //offset of pixels
 
 var player_w = 30;
 var player_h = 70;
@@ -54,7 +63,20 @@ var cave_chance = 0.001;     // Chance of a cave seeding
 var cave_iterations = 40;    // Cave-forming iterations
 var cave_spread_chance = 0.05;   // Chance of a cave spreading to neighbors during iteration
 
+// Fullscreen Button Action
+document.getElementById("fullscreen").addEventListener("click", function() {
+    var canvas = document.getElementById("canvas1");
 
+    if (canvas.requestFullscreen) {
+        canvas.requestFullscreen();
+    } else if (canvas.mozRequestFullScreen) { /* Firefox */
+        canvas.mozRequestFullScreen();
+    } else if (canvas.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+        canvas.webkitRequestFullscreen();
+    } else if (canvas.msRequestFullscreen) { /* IE/Edge */
+        canvas.msRequestFullscreen();
+    }
+});
 
 // World elements 0 = air, 1 = mars soil
 elHues = ["#000000", "#770000", "#440000"];
@@ -187,28 +209,44 @@ function tick() {
                 ctx.fillStyle = elHues[pA[y_index][x_index]];
                 ctx.fillRect((x - offXP % 1) * pixS, (y - offYP % 1) * pixS, pixS, pixS);
             }
-            else{
-                
-            }
         }
     }
 
     // Draw player
-    //ctx.fillStyle = "#00FF00";
-    //ctx.fillRect(player_off_x, player_off_y, player_w, -1 * player_h);
-    var x_coord = offXP * pixS + player_off_x
-    var y_coord = offYP * pixS + player_off_y
+
+    if(isMovingLeft) {
+        leftToggleCounter++;
+        if(leftToggleCounter >= leftToggleRate) {
+            if(currentFrame === 0) {
+                currentFrame = 1;
+            } 
+            else {
+                currentFrame = 0;
+            }
+            leftToggleCounter = 0;
+        }
+    }
+    
+    if(isMovingRight) {
+        rightToggleCounter++;
+        if(rightToggleCounter >= rightToggleRate) {
+            if(currentFrame === 3) {
+                currentFrame = 4;
+            } 
+            else {
+                currentFrame = 3;
+            }
+            rightToggleCounter = 0;
+        }
+    }
+    
+    if (!isMovingLeft && !isMovingRight) {
+        currentFrame = 2;
+    }
 
     var sourceX = currentFrame * frameWidth;
-    ctx.drawImage(spriteSheet, sourceX, 0, frameWidth, frameHeight, player_off_x - frameWidth / 2, player_off_y - frameHeight, frameWidth, frameHeight);
-    frameCounter++;
-    if (frameCounter >= frameSpeed) {
-        currentFrame++;
-        frameCounter = 0;
-    }
-    if (currentFrame >= totalFrames) {
-        currentFrame = 0;
-    }
+    ctx.drawImage(spriteSheet, sourceX, 0, frameWidth, frameHeight, 
+        player_off_x - frameWidth / 2, player_off_y - frameHeight, frameWidth, frameHeight);
 
     // Draw ref
     ctx.fillStyle = "#FF00FF";
@@ -220,7 +258,8 @@ function tick() {
 
     ctx.fillRect(player_off_x - 2 + player_w / 2, player_off_y - 2 - player_h, 4, 4);
 
-
+    var x_coord = offXP * pixS + player_off_x;
+    var y_coord = offYP * pixS + player_off_y;
     
 
 
@@ -370,26 +409,56 @@ c.addEventListener('click', function(event) {
 document.addEventListener('keydown', function(event) {
     switch(event.key.toLowerCase()) {
         case 'w': // up
+            isStill = true;
             if(offYP > 0) player_v_y -= player_acc_y;
             else player_v_y = 0;
             break;
         case 's': // down
+            isStill = true;
             if(offYP < pCYW - pCY) player_v_y += player_acc_x;
             else player_v_y = 0;
             break;
         case 'a': // left
+            isMovingLeft = true;
             if(offXP > 0) player_v_x -= player_acc_x;
             else player_v_x = 0;
             break;
         case 'd': // right
+            isMovingRight = true;
             if(offXP < pCXW - pCX) player_v_x += player_acc_x;
             else player_v_x = 0;
+            break;
+        //case 'space': // spacebar 
+
+        default:
+            // Action for any other key
+    }
+});
+
+document.addEventListener('keyup', function(event) {
+    switch(event.key.toLowerCase()) {
+        case 'w': // up
+            //isStill = false;
+            currentFrame = 2
+            break;
+        case 's': // down
+            //isStill = false;
+            currentFrame = 2
+            break;
+        case 'a': // left
+            isMovingLeft = false;
+            currentFrame = 2
+            break;
+        case 'd': // right
+            isMovingRight = false;
+            currentFrame = 2
             break;
         default:
             // Action for any other key
     }
 });
 
+// Mobile Controls--- Disregard for now
 function setupMobileControls() {
     var upButton = document.getElementById('up-button');
     var downButton = document.getElementById('down-button');
