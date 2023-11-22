@@ -12,8 +12,7 @@
     text-align: center;
     text-decoration: none;
     display: block;
-    margin: auto;
-    margin-top: 1rem; 
+    margin: auto; 
     cursor: pointer; 
     border-radius: 4px; 
 }
